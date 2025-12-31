@@ -9,7 +9,7 @@ O meu Projeto vai ser um script que que gera um pequeno relatório sobre o estad
 
 O objetivo deste projeto é conseguir facilitar a visualização rápida do consumo de hardware e fazer um relatorio com informações críticas do sistema, com as seguintes informações:
 
-- Uso do CPU
-- Memória RAM
-- Disco Rígido
-- Alerta em vermelho caso algum recurso ultrupasse os 80
+- Uso do CPU;
+- Memória RAM;
+- Disco Rígido;
+- Alerta em vermelho caso algum recurso ultrupasse os 80.
