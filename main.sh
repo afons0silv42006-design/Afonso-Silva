@@ -1,26 +1,35 @@
 #!/bin/bash
 
-echo "Data/Hora: $(date)"
+V='\033[0;32m'
+R='\033[0;31m'
+F='\033[0m' 
 
-CPU_LOAD=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')
-echo -e "Uso de CPU: ${VERDE}${CPU_LOAD}%${RESET}"
+echo "--- Relatorio do monitoramento do pc ($(date +%H:%M:%S)) ---"
 
-MEM_TOTAL=$(free -m | awk '/Mem:/ {print $2}')
-MEM_USADA=$(free -m | awk '/Mem:/ {print $3}')
-MEM_PERC=$(( MEM_USADA * 100 / MEM_TOTAL ))
+c=$(wmic cpu get loadpercentage | grep -o '[0-9]\+' | head -1)
+echo -e "CPU: ${V}${c}%${F}"
 
-echo -e "Memoria RAM: ${VERDE}${MEM_USADA}MB / ${MEM_TOTAL}MB (${MEM_PERC}%)${RESET}"
+rl=$(wmic os get freephysicalmemory | grep -o '[0-9]\+')
+rt=$(wmic computersystem get totalphysicalmemory | grep -o '[0-9]\+')
 
-DISCO_PERC=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
-echo -e "Espaço em Disco (/): ${VERDE}${DISCO_PERC}% usado${RESET}"
+t=$((rt / 1024 / 1024))
+l=$((rl / 1024))
+u=$((t - l))
+p=$((u * 100 / t))
 
-echo "--------------------------------------------"
-if [ "$MEM_PERC" -gt 80 ]; then
-    echo -e "${VERMELHO} ALERTA: Uso de Memoria RAM acima de 80%${RESET}"
+echo -e "RAM: ${V}${u}MB / ${t}MB (${p}%)${F}"
+
+d=$(df -h /c | tail -1 | awk '{print $5}' | cut -d'%' -f1)
+echo -e "Disco C: ${V}${d}% usado${F}"
+
+echo "------------------------------------------"
+
+if [ $p -gt 80 ]; then
+    echo -e "${R}A ram esta quase cheia!${F}"
 fi
 
-if [ "$DISCO_PERC" -gt 90 ]; then
-    echo -e "${VERMELHO} ALERTA: Pouco espaço em disco disponivel${RESET}"
+if [ $d -gt 90 ]; then
+    echo -e "${R}Cuidado: Ram esta a atingir o limite!${F}"
 fi
 
-echo "Verificação finalizada."
+echo "Relatorio Finalizado."
