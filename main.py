@@ -18,7 +18,7 @@ DISCO_PERC=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
 echo -e "Espaço em Disco (/): ${VERDE}${DISCO_PERC}% usado${RESET}"
 
 #Alertas
-echo "---------------------------------------"
+echo "--------------------------------------------"
 if [ "$MEM_PERC" -gt 80 ]; then
     echo -e "${VERMELHO} ALERTA: Uso de Memoria RAM acima de 80%${RESET}"
 fi
